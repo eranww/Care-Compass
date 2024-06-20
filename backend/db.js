@@ -54,7 +54,7 @@ async function getDocumentsWithSharedTags(caseid) {
   } catch (err) {
     console.error('Error executing query', err.stack);
   } finally {
-    await client.end();
+    client.release();
   }
 }
 
