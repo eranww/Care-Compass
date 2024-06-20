@@ -16,5 +16,7 @@ tags_list = [["soldier", "citizen", "none"],
         ["lack of judgement", "none"],
         ["drugs addiction", "alcohol addiction", "none"],
         ["drugs usage", "none"],
-        ["religious", "none"]
+        ["religious", "none"],
+        ["self-esteem issues", "none"],
+        ["nightmares", "none"],
 ]
