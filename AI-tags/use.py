@@ -6,7 +6,7 @@ def ask_questions_about_text(file_name, question):
     with open(file_name) as f:
         text = f.read()
         output = ask_model(question, text)
-        print(output)
+    return output
 
 def parse_named_entity_recognition(file_name):
     entities = {}
@@ -33,36 +33,42 @@ def classify(file_name, tags):
         output = zero_shot_classification(text, tags)
     max_score_index = np.argmax(output['scores'])
     tag = output['labels'][max_score_index]
-    return tag
+    prob = output['scores'][max_score_index]
+    return tag, prob
 
-file_name = "samples/Yotam.txt"
+# def use_hugging_face():
+#     for q in questions:
+#         print(q)
+#         answer = ask_questions_about_text(file_name, q)
+#         print(answer)
+#     parse_named_entity_recognition(file_name)
 
-questions = ["What is the mental health condition of the patient?",
-             "What event led to the patient's trauma?",
-             "How was the patient's childhood?",
-             "What challenge the patient has?",
-             "How does he feel?",
-             "What is his biggest fear?",
-             "what is the patient age?",
-             "Which kind of support systems the patient have (family/partner)?",
-             "How much time has passed since the traumatic event?",
-             "How long did the traumatic event take place?",
-             "Does the patient have any psychological diagnoses and what are them?",
-             "What kind of treatment the patient already got?",
-             "What is the gender of the patient?",
-             "Does the patient have a job?",
-             "What is the family status of the patient?"
-            ]
-
-def use_hugging_face():
-    for q in questions:
-        print(q)
-        ask_questions_about_text(file_name, q)
-    parse_named_entity_recognition(file_name)
-
-def blah():
+def get_tags(file_name):
+    target_tags = []
     for tags in tags_list:
-        tag = classify(file_name, tags)
-        print(tag)
+        tag, prob = classify(file_name, tags)
+        #print(f"{tag} - {prob}")
+        if prob > 0.85 and tag != "none":
+            target_tags.append(tag.lower())
+    diagnosis = "Does the patient have any psychological diagnoses and what are them?"
+    diagnosis = ask_questions_about_text(file_name, diagnosis)
+    if diagnosis != None:
+        target_tags.append(diagnosis.lower())
 
-blah()
+    return target_tags
+
+def use(debug, file_name = None):
+    if file_name == None:
+        file_name = "samples/Maya.txt"
+
+    target_tags = get_tags(file_name)
+
+    if debug:
+        for tag in target_tags:
+            print(tag)
+    
+    return target_tags
+
+def use_api(file_name):
+    debug = False
+    use(debug, file_name)
