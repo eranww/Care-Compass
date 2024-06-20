@@ -5,6 +5,12 @@ const { Pool } = require('pg');
 const cors = require('cors');
 require('dotenv').config();
 
+// import functions from db.js
+const { getFromDb, insertIntoDb } = require('./db');
+const { get } = require('http');
+
+
+
 // Initialize express app
 const app = express();
 
@@ -53,7 +59,15 @@ app.post('/data', async (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 11524;
+
 app.listen(PORT, () => {
-  console.log('Server running on port ${PORT}');
-});
+    console.log(`Server running on port ${PORT}`);
+    
+    // Call getFromDb when the server starts
+    getFromDb().then((data) => {
+      console.log('Data from the database on server start:', data);
+    }).catch((err) => {
+      console.error('Error fetching data from the database:', err.message);
+    });
+  });

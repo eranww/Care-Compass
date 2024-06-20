@@ -15,7 +15,7 @@ const pool = new Pool({
 async function getFromDb() {
   const client = await pool.connect();
   try {
-    const result = await client.query('SELECT * FROM myTable');
+    const result = await client.query('SELECT * FROM Tags');
     return result.rows;
   } finally {
     client.release();
