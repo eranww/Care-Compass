@@ -123,7 +123,7 @@ async function addCaseAndFindSimilar(caseContent, tags) {
 async function getAllTags() {
   const client = await pool.connect();
   try {
-    const query = 'SELECT tag_id, tag_name FROM tags';
+    const query = 'SELECT id, name FROM tags';
     const result = await client.query(query);
     return result.rows;
   } catch (err) {
@@ -136,7 +136,7 @@ async function getAllTags() {
 async function getAllCases() {
   const client = await pool.connect();
   try {
-    const query = 'SELECT case_id, case_content FROM cases';
+    const query = 'SELECT id, content FROM cases';
     const result = await client.query(query);
     return result.rows;
   } catch (err) {
