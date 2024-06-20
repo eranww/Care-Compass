@@ -32,6 +32,7 @@ async function insertIntoDb(data) {
   }
 }
 
+// adds a case with tags to the DB
 async function addCaseWithTags(caseContent, tags) {
   const client = await pool.connect();
   try {
@@ -80,6 +81,7 @@ async function addCaseWithTags(caseContent, tags) {
   }
 }
 
+//gets cases with shared tags, sorted by the most commmon tags (most common should appear first)
 async function getCasesWithSharedTags(caseid) {
   try {
     await client.connect();
@@ -120,6 +122,7 @@ async function addCaseAndFindSimilar(caseContent, tags) {
     console.error('Error:', err);
   }
 }
+//debug function: gets all tags from the db
 async function getAllTags() {
   const client = await pool.connect();
   try {
@@ -133,6 +136,7 @@ async function getAllTags() {
   }
 }
 
+//debug function: gets all cases from the db
 async function getAllCases() {
   const client = await pool.connect();
   try {
