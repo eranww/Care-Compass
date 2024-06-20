@@ -15,7 +15,7 @@ const pool = new Pool({
 async function getFromDb() {
   const client = await pool.connect();
   try {
-    const result = await client.query('SELECT * FROM Tags');
+    const result = await client.query('SELECT * FROM tags');
     return result.rows;
   } finally {
     client.release();
@@ -32,7 +32,55 @@ async function insertIntoDb(data) {
   }
 }
 
-async function getDocumentsWithSharedTags(caseid) {
+async function addCaseWithTags(caseContent, tags) {
+  const client = await pool.connect();
+  try {
+    // Insert the case content into the cases table
+    const insertCaseQuery = `
+      INSERT INTO cases (case_content) 
+      VALUES ($1) 
+      RETURNING case_id;
+    `;
+    const caseResult = await client.query(insertCaseQuery, [caseContent]);
+    const caseId = caseResult.rows[0].case_id;
+
+    // Insert each tag into the tags table if it doesn't exist and get the tag_id
+    for (const tag of tags) {
+      const insertTagQuery = `
+        INSERT INTO tags (tag_name) 
+        VALUES ($1) 
+        ON CONFLICT (tag_name) DO NOTHING 
+        RETURNING tag_id;
+      `;
+      const tagResult = await client.query(insertTagQuery, [tag]);
+      let tagId;
+      if (tagResult.rows.length > 0) {
+        tagId = tagResult.rows[0].tag_id;
+      } else {
+        // If the tag already exists, fetch its tag_id
+        const selectTagQuery = `SELECT tag_id FROM tags WHERE tag_name = $1`;
+        const existingTagResult = await client.query(selectTagQuery, [tag]);
+        tagId = existingTagResult.rows[0].tag_id;
+      }
+
+      // Insert into the case_tags table to associate the case with the tag
+      const insertCaseTagQuery = `
+        INSERT INTO case_tags (case_id, tag_id) 
+        VALUES ($1, $2);
+      `;
+      await client.query(insertCaseTagQuery, [caseId, tagId]);
+    }
+
+    console.log('Case and tags inserted successfully');
+    return caseId;
+  } catch (err) {
+    console.error('Error executing query', err.stack);
+  } finally {
+    await client.end();
+  }
+}
+
+async function getCasesWithSharedTags(caseid) {
   try {
     await client.connect();
 
@@ -57,5 +105,20 @@ async function getDocumentsWithSharedTags(caseid) {
     client.release();
   }
 }
+async function addCaseAndFindSimilar(caseContent, tags) {
+  try {
+    // Add the new case and tags, and get the new case ID
+    const newCaseId = await addCaseWithTags(caseContent, tags);
+    console.log('New case ID:', newCaseId);
 
-module.exports = { getFromDb, insertIntoDb };
+    // Find similar cases based on the new case ID
+    const similarCases = await getCasesWithSharedTags(newCaseId);
+    console.log('Similar cases:', similarCases);
+
+    return { newCaseId, similarCases };
+  } catch (err) {
+    console.error('Error:', err);
+  }
+}
+
+module.exports = { getFromDb, insertIntoDb, getCasesWithSharedTags, addCaseWithTags};
