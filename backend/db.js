@@ -76,7 +76,7 @@ async function addCaseWithTags(caseContent, tags) {
   } catch (err) {
     console.error('Error executing query', err.stack);
   } finally {
-    await client.end();
+    client.release();
   }
 }
 
@@ -120,5 +120,30 @@ async function addCaseAndFindSimilar(caseContent, tags) {
     console.error('Error:', err);
   }
 }
+async function getAllTags() {
+  const client = await pool.connect();
+  try {
+    const query = 'SELECT tag_id, tag_name FROM tags';
+    const result = await client.query(query);
+    return result.rows;
+  } catch (err) {
+    console.error('Error executing query', err.stack);
+  } finally {
+    client.release();
+  }
+}
 
-module.exports = { getFromDb, insertIntoDb, getCasesWithSharedTags, addCaseWithTags};
+async function getAllCases() {
+  const client = await pool.connect();
+  try {
+    const query = 'SELECT case_id, case_content FROM cases';
+    const result = await client.query(query);
+    return result.rows;
+  } catch (err) {
+    console.error('Error executing query', err.stack);
+  } finally {
+    client.release();
+  }
+}
+
+module.exports = { getFromDb, insertIntoDb, getCasesWithSharedTags, addCaseWithTags, addCaseAndFindSimilar, getAllTags, getAllCases};
