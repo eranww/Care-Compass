@@ -1,0 +1,13 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "CS_HACK_2024",
+            "Group": "CARE_COMPASS",
+            "Host": "pg-39e2ea0a-test36636.g.aivencloud.com",
+            "Port": 11524,
+            "MaintenanceDB": "defaultdb",
+            "Username": "avnadmin",
+            "SSLMode": "require"
+        }
+    }
+}
