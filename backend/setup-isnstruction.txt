@@ -1,0 +1,5 @@
+npm install express pg dotenv
+npm install cors
+npm install dotenv
+
+node server.js
