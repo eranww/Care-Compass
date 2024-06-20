@@ -1,22 +1,24 @@
 import psycopg2
 
-# Database connection details
+# Database connection details - to be replaced with our DB information
 db_host = 'your_rds_endpoint'
 db_port = '5432'
 db_name = 'your_db_name'
 db_user = 'your_username'
 db_password = 'your_password'
 
+#DB layout as follows:
+
 # SQL commands to create tables
 create_tables_query = '''
 CREATE TABLE IF NOT EXISTS Cases (
-    id SERIAL PRIMARY KEY,
-    case_notes TEXT NOT NULL,
+    case_id SERIAL PRIMARY KEY,
+    case_description TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS Tags (
-    id SERIAL PRIMARY KEY,
+    tag_id SERIAL PRIMARY KEY,
     tag_name VARCHAR(255) NOT NULL UNIQUE
 );
 
