@@ -1,0 +1,19 @@
+/* App.css */
+.App {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Takes the full height of the viewport */
+    width: 100vw; /* Takes the full width of the viewport */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  /* App.css */
+  body {
+    background: linear-gradient(to bottom, #efe67f 0%, rgb(237, 205, 92) 100%);
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
