@@ -13,7 +13,7 @@ const theme = createTheme({
       main: '#ff1744',  // Color for errors
     },
     background: {
-      default: '#f0f2f5',  // Background color for the app
+      default: '#ffe900',  // Background color for the app
     },
   },
   typography: {

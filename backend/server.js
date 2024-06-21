@@ -3,10 +3,10 @@ require('dotenv').config(); // This line loads the environment variables from th
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
-require('dotenv').config();
+
 
 // import functions from db.js
-const { getFromDb, insertIntoDb } = require('./db');
+const { getFromDb, insertIntoDb, createTable, getTags } = require('./db');
 const { get } = require('http');
 
 
@@ -65,9 +65,9 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     
     // Call getFromDb when the server starts
-    getFromDb().then((data) => {
-      console.log('Data from the database on server start:', data);
+    getTags().then((data) => {
+        console.log('Data from database:', data);
     }).catch((err) => {
-      console.error('Error fetching data from the database:', err.message);
+        console.error('Error getting data from database:', err);
     });
   });
