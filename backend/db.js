@@ -108,6 +108,29 @@ async function getCasesWithSharedTags(caseid) {
   }
 }
 
+//gets similar cases from a list of tags
+async function getCasesByTags(tags) {
+  const client = await pool.connect();
+  try {
+    const query = `
+      SELECT c.id, c.content, COUNT(t.id) AS shared_tags, array_agg(t.name) AS shared_tag_names
+      FROM cases c
+      JOIN case_tags ct ON c.id = ct.id
+      JOIN tags t ON ct.tag_id = t.id
+      WHERE t.name = ANY($1::text[])
+      GROUP BY c.id, c.content
+      ORDER BY shared_tags DESC;
+    `;
+    const values = [tags];
+    const result = await client.query(query, values);
+    return result.rows;
+  } catch (err) {
+    console.error('Error executing query', err.stack);
+  } finally {
+    client.release();
+  }
+}
+
 //uploads a case and searches for similar cases in the db
 async function addCaseAndFindSimilar(caseContent, tags) {
   try {
@@ -153,4 +176,4 @@ async function getAllCases() {
   }
 }
 
-module.exports = { getFromDb, insertIntoDb, getCasesWithSharedTags, addCaseWithTags, addCaseAndFindSimilar, getAllTags, getAllCases};
+module.exports = { getFromDb, insertIntoDb, getCasesWithSharedTags, addCaseWithTags, addCaseAndFindSimilar, getAllTags, getAllCases, getCasesByTags};
