@@ -3,6 +3,7 @@ import UploadButton from './UploadButton.jsx';
 import TagsArea from './TagsArea';
 import SearchInput from './SearchInput.jsx';
 import Button from '@mui/material/Button';
+import SubmitPanel from './SubmitPanel.jsx';
 
 function ControlPanel() {
     const [uploaded, setUploaded] = useState(false);
@@ -24,7 +25,7 @@ function ControlPanel() {
     setFile(event.target.files[0]);
   };
 
-  //This is the handleSubmit Mathan wrote for the AI
+  //This is the handleSubmit Matan wrote for the AI
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -50,10 +51,7 @@ function ControlPanel() {
     return (
         <div>
             {uploaded ? (
-                <div>
-                    <TagsArea fileData={fileData} />
-                    <Button variant="contained" color="primary">Submit</Button>
-                </div>
+                <SubmitPanel/>
             ) : (
                 <UploadButton onUpload={handleFileUpload} />
             )}

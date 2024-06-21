@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 
 function SubmitPanel() {
     // Initialize with hardcoded tags
-    const [tags, setTags] = useState(["React", "JavaScript", "Node.js"]);
+    const [tags, setTags] = useState(["React","React2","React3", "JavaScript", "Node.js"]);// TOFIX: HARDCORED TAGS
 
     // Handle the submit action
     const handleSubmit = () => {
@@ -15,10 +15,12 @@ function SubmitPanel() {
 
     return (
         <div>
-            <TagsArea tags={tags} />  // Pass tags to the TagsArea component
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
-                Submit
-            </Button>
+            <TagsArea tags={tags} />
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    Submit
+                </Button>
+            </div>
         </div>
     );
 }

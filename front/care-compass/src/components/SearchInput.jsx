@@ -10,9 +10,32 @@ function SearchInput({ onSearch }) {
     setInput(event.target.value);
   };
 
-  const handleSubmit = () => {
-    onSearch(input);
+  const handleSubmit = async () => {
+    if (input.trim() !== '') {
+      try {
+        const result = await getSimilarCasesFromShortText(input);
+        onSearch(result);  // Assuming onSearch will handle the result
+      } catch (error) {
+        console.error('Failed to fetch similar cases:', error);
+      }
+    }
   };
+
+  async function getSimilarCasesFromShortText(text) {
+    const response = await fetch('/api/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text })
+    });
+  
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+  
+    return await response.json();// reuturn the similar cases: case_id, content of case, counter of shared tags, list of shared tags names.
+  }
 
   return (
     <Box display="flex" gap={2} alignItems="center">
